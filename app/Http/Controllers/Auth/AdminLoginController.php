@@ -11,7 +11,8 @@ class AdminLoginController extends Controller
 	public function __construct()
 	{
 		// we always doing people that are not logged in as admin is who we're redirecting OR who we want to be have access to this
-		$this->middleware('guest:admin');
+		$this->middleware('guest:admin', ['except' => ['logout']]);
+        //  not to use this middleware for the logout
 	}
 
 
@@ -46,7 +47,17 @@ class AdminLoginController extends Controller
 
     	// 4.
     	return redirect()->back()->withInput($request->only('email', 'remember'));
-    	
+    }
 
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        Auth::guard('admin')->logout();
+        return redirect('/');
     }
 }
